@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>方式一</title>
+    <script language="JavaScript">
+        function colseit() {
+            setTimeout("self.close()",10000)
+        }
+    </script>
+</head>
+<body onload="colseit()">
+<p>我爱学习</p>
+<p>学习爱我</p>
+<p>沉迷学习</p>
+<p>无法自拔</p>
+</body>
+</html>
+<-------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>方式二</title>
+    <style type="text/css"></style>
+</head>
+<body onload="setTimeout(window.close,3000)">
+<p>我爱学习</p>
+<p>学习爱我</p>
+<p>沉迷学习</p>
+<p>无法自拔</p>
+</body>
+</html>
+<-------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>方式三</title>
+</head>
+<body bgcolor="f0d070" vlink="3300fc">
+<table border="0" width="288">
+    <tr>
+        <td class="cc1">自动关闭窗口示例</td>
+    </tr>
+</table>
+<script language="JavaScript">
+    function clock() {
+        i=i-1;
+        document.title="本窗口将在"+i+"秒后自动关闭";
+        if(i>0) setTimeout("clock()",1000);
+        else self.close();
+    }
+    var i=10;
+    clock();
+</script>
+</body>
+</html>
