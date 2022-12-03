@@ -14,6 +14,7 @@ public class FileDetectServiceImpl extends FileDetectServiceGrpc.FileDetectServi
 
 
     private TikaService tikaService = new TikaService();
+    private RarTools rarTools = new RarTools();
 
     public void detect(UndetectedFile undetectedFile,
                        io.grpc.stub.StreamObserver<DetectedFile> responseObserver) {
@@ -68,12 +69,11 @@ public class FileDetectServiceImpl extends FileDetectServiceGrpc.FileDetectServi
             // 判断是否是加密 RAR   application/x-rar-compressed; version=4
             if (detectedFileBuilder.getTagsMap().get(Contant.MIME_TYPE).contains("rar")){
                 //TODO 路徑  不加密是否添加到標籤
-                String encrypted = RarTools.isEncrypted(undetectedFile.getName());
+                String encrypted = rarTools.isEncrypted1(undetectedFile);
                 detectedFileBuilder.putTags(Contant.ENCRYPTED,encrypted);
-
+                System.out.println("=============");
             }
 
-            //語種
 
         } catch (Exception e) {
             e.printStackTrace();

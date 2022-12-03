@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package teligen;
+
+option java_multiple_files = true;
+option java_package = "com.teligen.fileDetector.generate";
+
+
+// 未识别文件的消息  client --> server
+message UndetectedFile {
+  string uuid = 1;
+
+  // 公告.pdf, 采购列表.xls, index.html
+  string name = 2;
+
+  // 文件内容
+  bytes content = 3;
+}
+
+
+// 识别后消息   response
+message DetectedFile {
+  string uuid = 1;
+  string name = 2;
+
+  // tika  --> 内容  html<h2> --- </h>
+  string detContent = 3;
+
+  // map  <标签类型， 值>
+  // mimeType -- xxx
+  // sufix -- xx
+  // enc -- yes/no
+  map<string, string> tags = 4;
+
+  map<string, string> details = 5;
+}
+
+
+service FileDetectService {
+   rpc detect(UndetectedFile) returns (DetectedFile){};
+
+   rpc streamDetect(stream UndetectedFile) returns (stream DetectedFile){};
+ }

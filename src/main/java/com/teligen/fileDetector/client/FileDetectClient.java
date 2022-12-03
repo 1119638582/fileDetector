@@ -8,6 +8,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.NameResolver;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,14 +38,15 @@ public class FileDetectClient {
 
         // 测试
         System.out.println("测试");
-        final byte[] bytes = Files.readAllBytes(Paths.get("data1/test.html"));
+        final byte[] bytes = Files.readAllBytes(Paths.get("data1/file6e.rar"));
         final UndetectedFile undetectedFile = UndetectedFile.newBuilder()
                 .setUuid("111")
-                .setName("test.html")
+                .setName("file6e.rar")
                 .setContent(ByteString.copyFrom(bytes))
                 .build();
         final DetectedFile detect = blockingStub.detect(undetectedFile);
         System.out.println(detect);
+        //Files.write(Paths.get(""),bytes);
     }
 
 }

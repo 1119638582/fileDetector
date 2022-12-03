@@ -1,12 +1,12 @@
 package com.teligen.fileDetector.util;
 
+import com.teligen.fileDetector.generate.UndetectedFile;
 import net.sf.sevenzipjbinding.*;
 import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
+import org.apache.pdfbox.io.RandomAccessBuffer;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -67,6 +67,59 @@ public class RarTools {
         return isEncrypted;
     }
 
+    public  String isEncrypted1(UndetectedFile undetectedFile) throws SevenZipException, IOException {
+        IInArchive inArchive = null;
+        RandomAccessFile randomAccessFile = null;
+
+        String isEncrypted = "no";
+        try{
+            File file=getFileFromBytes(undetectedFile.getContent().toByteArray(),"D:\\intellijidea\\test\\practice\\grpc\\fileDetector\\data1\\1.rar");
+
+            //randomAccessFile = new RandomAccessFile(Arrays.toString(file), "r");
+            randomAccessFile = new RandomAccessFile(file, "r");
+            //randomAccessFile = new RandomAccessFile(Arrays.toString(file), "r");
+            randomAccessFile = new RandomAccessFile(file, "r");
+            //inArchive = SevenZip.openInArchive(null, new RandomAccessFileInStream(randomAccessFile));
+            inArchive = SevenZip.openInArchive(null, (IInStream) undetectedFile.getContent());
+            if (Boolean.TRUE.equals(inArchive.getArchiveProperty(PropID.ENCRYPTED))) isEncrypted = "yes";
+            for (int i=0;i<inArchive.getNumberOfItems();i++) {
+                if (Boolean.TRUE.equals(inArchive.getProperty(i,PropID.ENCRYPTED))) isEncrypted = "yes";
+            }
+        } finally {
+            if(inArchive != null){
+                inArchive.close();
+            }
+            if(randomAccessFile != null){
+                randomAccessFile.close();
+            }
+        }
+        return isEncrypted;
+    }
+    public File getFileFromBytes(byte[] b,String outputFile) {
+        BufferedOutputStream stream = null;
+        File file = null;
+        try {
+            //获取本地文件
+            file = new File(outputFile);
+            //打开输出流
+            FileOutputStream fstream = new FileOutputStream(file);
+            //字节缓冲输出流
+            stream = new BufferedOutputStream(fstream);
+            //开始写数据
+            stream.write(b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return file;
+    }
 
     boolean isEncrypted(IInArchive archive) throws SevenZipException {
         if (Boolean.TRUE.equals(archive.getArchiveProperty(PropID.ENCRYPTED))) return true;

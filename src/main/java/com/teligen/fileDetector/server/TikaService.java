@@ -36,18 +36,22 @@ public class TikaService {
 
             // 提取的文件内容
             bufferedInputStream.reset();
-
-
             try {
-                final String detContent = tika.parseToString(bufferedInputStream, metadata);
+                //去除html的尖标签
                 if (mimetype.contains("html")){
                     WriteOutContentHandler contenthandler = new WriteOutContentHandler(100000000);
                     Parser parser = new AutoDetectParser();
                     parser.parse(bufferedInputStream, contenthandler, metadata, new ParseContext());
                     detectedFileBuilder.setDetContent(contenthandler.toString());
-                    System.out.println(contenthandler.toString()+"===========");
-                }else {
+                    System.out.println(contenthandler.toString()+"html===========");
+                }
+                else if (mimetype.contains("rar")){
+                    System.out.println("类型为rar");
+                }
+                else {
+                    final String detContent = tika.parseToString(bufferedInputStream, metadata);
                     detectedFileBuilder.setDetContent(detContent);
+                    System.out.println("nohtml===========");
                 }
 
             } catch (Exception e) {
