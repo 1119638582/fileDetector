@@ -1,8 +1,10 @@
 package com.teligen.fileDetector.util;
 
+import com.google.protobuf.ByteString;
 import com.teligen.fileDetector.generate.UndetectedFile;
 import net.sf.sevenzipjbinding.*;
 import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
+import net.sf.sevenzipjbinding.util.ByteArrayStream;
 import org.apache.pdfbox.io.RandomAccessBuffer;
 
 import java.io.*;
@@ -44,7 +46,7 @@ public class RarTools {
      * 解压后文件存放路径 - 支持压缩格式：7z, zip, tar, rar, lzma, iso, gzip, bzip2,
      *                    cpio, z, arj, lzh, cab, chm, nsis, deb, rpm, udf, wim
      */
-    public static String isEncrypted(String file) throws SevenZipException, IOException {
+    public static String isEncryptedFile(String file) throws SevenZipException, IOException {
         IInArchive inArchive = null;
         RandomAccessFile randomAccessFile = null;
 
@@ -67,20 +69,15 @@ public class RarTools {
         return isEncrypted;
     }
 
-    public  String isEncrypted1(UndetectedFile undetectedFile) throws SevenZipException, IOException {
+    public  String isEncryptedBytes(byte[] bytes) throws SevenZipException, IOException {
         IInArchive inArchive = null;
         RandomAccessFile randomAccessFile = null;
 
         String isEncrypted = "no";
         try{
-            File file=getFileFromBytes(undetectedFile.getContent().toByteArray(),"D:\\intellijidea\\test\\practice\\grpc\\fileDetector\\data1\\1.rar");
 
-            //randomAccessFile = new RandomAccessFile(Arrays.toString(file), "r");
-            randomAccessFile = new RandomAccessFile(file, "r");
-            //randomAccessFile = new RandomAccessFile(Arrays.toString(file), "r");
-            randomAccessFile = new RandomAccessFile(file, "r");
-            //inArchive = SevenZip.openInArchive(null, new RandomAccessFileInStream(randomAccessFile));
-            inArchive = SevenZip.openInArchive(null, (IInStream) undetectedFile.getContent());
+            ByteArrayStream stream = new ByteArrayStream(bytes,false);
+            inArchive = SevenZip.openInArchive(null, stream);
             if (Boolean.TRUE.equals(inArchive.getArchiveProperty(PropID.ENCRYPTED))) isEncrypted = "yes";
             for (int i=0;i<inArchive.getNumberOfItems();i++) {
                 if (Boolean.TRUE.equals(inArchive.getProperty(i,PropID.ENCRYPTED))) isEncrypted = "yes";

@@ -38,7 +38,7 @@ public class FileDetectClient {
 
         // 测试
         System.out.println("测试");
-        final byte[] bytes = Files.readAllBytes(Paths.get("data1/file6e.rar"));
+        final byte[] bytes = Files.readAllBytes(Paths.get("data1/file6.rar"));
         final UndetectedFile undetectedFile = UndetectedFile.newBuilder()
                 .setUuid("111")
                 .setName("file6e.rar")

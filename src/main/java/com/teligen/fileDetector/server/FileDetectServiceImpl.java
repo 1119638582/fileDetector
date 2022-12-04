@@ -64,16 +64,13 @@ public class FileDetectServiceImpl extends FileDetectServiceGrpc.FileDetectServi
         try {
             tikaService.detect(undetectedFile.getName(), undetectedFile.getContent().toByteArray(), detectedFileBuilder);
 
-            // 判断是否是加密 RAR
-            // Sevenzipjbinding
             // 判断是否是加密 RAR   application/x-rar-compressed; version=4
             if (detectedFileBuilder.getTagsMap().get(Contant.MIME_TYPE).contains("rar")){
                 //TODO 路徑  不加密是否添加到標籤
-                String encrypted = rarTools.isEncrypted1(undetectedFile);
+                String encrypted = rarTools.isEncryptedBytes(undetectedFile.toByteArray());
                 detectedFileBuilder.putTags(Contant.ENCRYPTED,encrypted);
                 System.out.println("=============");
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
